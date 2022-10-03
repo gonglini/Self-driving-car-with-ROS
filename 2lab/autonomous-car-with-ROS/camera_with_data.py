@@ -3,7 +3,7 @@ import cv2
 import time
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model
+from tensorflow.python.keras.models import load_model #책에서는 from tensorflow.keras.models 으로 되어있음
 
 
 def img_preprocess(frame):
@@ -30,8 +30,7 @@ def main():
 
         keyValue = cv2.waitKey(1)
         
-        if cv2.waitKey(1) ==ord('q'):
-            break
+
         
         ret,frame=camera.read() 
         frame = cv2.flip(frame,1)
@@ -42,8 +41,11 @@ def main():
         cv2.imshow('pre',preprocessed)
 
         X = np.asarray([preprocessed])
-        steering_angle= int(model.predoct(X)[0])
+        steering_angle= int(model.predict(X)[0])
         print("predict angle: ", steering_angle)
+
+        if cv2.waitKey(1) ==ord('q'):
+            break
 
     cv2.destroyAllWindows()
 
