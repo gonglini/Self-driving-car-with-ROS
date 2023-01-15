@@ -2,7 +2,7 @@
 #기존의 camera_cv2_yuv에 인식되는 카메라 영상을 설정한 time값에 맞춰 지정된 경로에 사진을 저장함
 
 
-from re import S
+
 import cv2 
 import time
 import numpy as np
