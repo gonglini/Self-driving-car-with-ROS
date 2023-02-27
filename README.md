@@ -21,7 +21,7 @@ Component List:
 * Esc: Hobbywing WF brushed esc 60A
 * Battery: 2s 5200 mAh Lipo, direct connection to servo board for servo power
 * Camera: 1080p FHD webcam
-* other: XL4015 dc-dc stepdown converter x2
+* other: XL4015 dc-dc stepdown converter
 
 
 
@@ -58,7 +58,7 @@ catkin_ws/
 If any git permission errors are encountered, try the following suggestions via [this stackoverflow post](https://stackoverflow.com/questions/8197089/fatal-error-when-updating-submodule-using-git).
 
 
-Since the same repo is checked out on both a Json and a laptop/PC, you will need to install an i2c library on the laptop/pc for the software to compile correctly. The `i2cpwm_board` node is not run on the laptop/pc.
+Since the same repo is checked out on both a Json and a laptop/PC, you will need to install an i2c library on the laptop/pc for the software to compile correctly. The `i2cpwm_board`is not run on the laptop/pc.
 
 You should install additional packages on Json.
 
