@@ -3,7 +3,7 @@
 This project was created by gonglini (me).
 
 
-<img src=https://user-images.githubusercontent.com/65767592/221577472-4a88ca98-18b0-489c-8adb-9dfcaa3cbef1.jpg width="600" height="400"/>
+<img src=https://user-images.githubusercontent.com/65767592/221577472-4a88ca98-18b0-489c-8adb-9dfcaa3cbef1.jpg width="600" height="400"/></center>
 
 
 ## Overview
@@ -36,7 +36,7 @@ Software version:
 * Darknet yoloV4
 * ROS Melodic
 
-This repo is structured as a catkin workspace in a ROS Melodic envivornment on Ubuntu 16.04. The software may not work or compile outside this environment. Jetson nano images preloaded with Ubuntu 18.04 and a ROS Melodic installation can be found via ubiquity robotics. [See ubiquity robotics webpage](https://downloads.ubiquityrobotics.com/) for download, setup, and wifi setup instructions. It is suggested to also install ROS Melodic on a Ubuntu 18.04 linux installation/dual boot/virtual machine on a PC for development and for running control nodes. Instructions to install ROS melodicc can be found [here](http://wiki.ros.org/melodic/Installation/Ubuntu).
+This repo is structured as a catkin workspace in a ROS Melodic envivornment on Ubuntu 18.04. The software may not work or compile outside this environment. Jetson nano images preloaded with Ubuntu 18.04 and a ROS Melodic installation can be found via ubiquity robotics. [See ubiquity robotics webpage](https://downloads.ubiquityrobotics.com/) for download, setup, and wifi setup instructions. It is suggested to also install ROS Melodic on a Ubuntu 18.04 linux installation/dual boot/virtual machine on a PC for development and for running control nodes. Instructions to install ROS melodicc can be found [here](http://wiki.ros.org/melodic/Installation/Ubuntu).
 
 I used compact command to install ROS melodic made by zeta(https://github.com/zeta0707/installROS.git)
 
@@ -75,6 +75,7 @@ Open at least three terminal windows, with not ssh.
 ## Additional Project Components
 #### Object detection
 The project contains object detection by using darknet yoloV4. I made customize wieght file by machine learning. 
+It learned about 6000 times for 3 classes. And i modified batch and subdivision for Jsons capability.
 Here is the result.
 
 
@@ -83,10 +84,10 @@ Here is the result.
 
 
 #### Predict angle
+The project contains predict angle by using colab included tensorflow, scikt-learn, etc...  I made customize wieght file.
+You can see training loss chart and results.
 
 
-#### SLAM
-If a lidar, such as a RPLidar A1, is mounted to the robot frame, 2d mapping is possible through SLAM with additional ROS nodes, such as hector_slam. More information about running SLAM through this project is described in the [SLAM information](docs/slam_information.md) document.
 
 ## Future Work
 
