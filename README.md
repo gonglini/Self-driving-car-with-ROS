@@ -56,8 +56,8 @@ Since the same repo is checked out on both a Json and a laptop/PC, you will need
 `sudo apt-get install libi2c-dev`
 
 You should install servokit and pca9685
-sudo pip3 install adafruit-circuitpython-pca9685
-sudo pip3 install adafruit-circuitpython-servokit 
+*'sudo pip3 install adafruit-circuitpython-pca9685'
+*'sudo pip3 install adafruit-circuitpython-servokit'
 
 #### Note on Walking Gaits
 The default gait implemented is a 8 phase gait that incorporates body movement which helps maintain balance and stability. An alternate trot gait, where the diagonally opposite legs move simultaneously, can achieve faster walking speeds, but is less stable and requires careful positioning of the robot's center of mass. The trot gait is the one depicted in the animation at the top of this document. See the `spot_micro_motion_cmd` node's config file for information on how to switch to the trot gait. The 8 phase gait can be observed in the linked Youtube video.
