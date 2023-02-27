@@ -89,7 +89,8 @@ You can see training loss chart and results.
 
 
 <img src=https://user-images.githubusercontent.com/65767592/221589976-ea38e351-cb72-46d5-9f16-3fa286c93f72.png width="350" height="350" align="left">
-<img src=https://user-images.githubusercontent.com/65767592/221589371-191f32eb-fe43-4af3-acec-57170d3cf856.jpg width="350" height="350" align="right"><br/>  
+<img src=https://user-images.githubusercontent.com/65767592/221590973-2000ab1d-6d99-499e-93ea-baa722bf59e2.png width="350" height="350" > 
+
 
 
 ## Future Work
