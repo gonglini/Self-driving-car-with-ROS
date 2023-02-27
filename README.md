@@ -69,8 +69,8 @@ You should install additional packages on Json.
 
 #### Running:
 Open at least three terminal windows, with not ssh. 
-* `rosrun detect detector_pub.py`: Run on the Json to detect object while driving. If car detect specific object, it will publish topic.
-* `rosrun detect detector_sub.py` Run on the Json to predict angle for driving. If car subscribe topic, it will realize accident and stop driving.
+* `rosrun detect detection_pub.py`: Run on the Json to detect object while driving. If car detect specific object, it will publish topic.
+* `rosrun detect detection_sub.py` Run on the Json to predict angle for driving. If car subscribe topic, it will realize accident and stop driving.
 
 ## Additional Project Components
 ### Object detection
