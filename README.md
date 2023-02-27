@@ -67,9 +67,6 @@ You should install additional packages on Json.
 *   `sudo pip3 install board`
 *   `sudo pip3 install keyboard`
 
-#### Note on perdict angle
-
-
 #### Running:
 Open at least three terminal windows, with not ssh. 
 * `rosrun detect detector_pub.py`: Run on the Json to detect object while driving. If car detect specific object, it will publish topic.
@@ -77,19 +74,16 @@ Open at least three terminal windows, with not ssh.
 
 ## Additional Project Components
 #### Object detection
-The project contains object detection by using darknet yoloV4. I made customize wieght file by machine learning. and here is the result with chart.
+The project contains object detection by using darknet yoloV4. I made customize wieght file by machine learning. 
+Here is the result.
 
 
 <img src=https://user-images.githubusercontent.com/65767592/221584677-3f24eafd-89b7-4b08-8a37-be0a2375a1e2.png width="600" height="400"/>
 
 
 
+#### Predict angle
 
-#### TF2 Publishing and Odometry
-Robot state transforms ar
-ublished via TF2. Some primary frames of interest are `base_footprint` and `base_link`, and `lidar_link`. `base_footprint` is a coordinate frame at zero height at the base of the robot frame. `base_link` is the coordinate frame fixed to the body center of the robot, and moves and rotates with body motion. `lidar_link` is a coordinate frame aligned with an installed lidar.
-
-An odometry frame, `odom`, is optionally available and can be enabled via a configurable parameter in the `spot_micro_motion_cmd.yaml` file. If enabled, `odom` is parent to the `base_footprint` frame.  **Note that odometry is grossly inaccurate and not calibrated whatsoever**. It is a pure integration of robot rate commands and thus drifts unbounded with errors over time. It is provided for any useful purpose it may serve.
 
 #### SLAM
 If a lidar, such as a RPLidar A1, is mounted to the robot frame, 2d mapping is possible through SLAM with additional ROS nodes, such as hector_slam. More information about running SLAM through this project is described in the [SLAM information](docs/slam_information.md) document.
