@@ -19,8 +19,7 @@ Component List:
 * Servo control board: PCA9685, controlled via i2c (It's easy to break down, so I recommend you to buy extra products.)
 * Servos: CLS6336HV x1
 * Esc: Hobbywing WF brushed esc 60A
-* Battery: 2s 5200 mAh Lipo, direct connection to servo board for servo power
-* Camera: 1080p FHD webcam
+* Battery: 2s 5200 mAh Lipo
 * other: XL4015 dc-dc stepdown converter
 
 
