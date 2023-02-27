@@ -88,8 +88,8 @@ The project contains predict angle by using colab included tensorflow, scikt-lea
 You can see training loss chart and results.
 
 
-<img src=https://user-images.githubusercontent.com/65767592/221591207-7d4cdd2c-b77c-4253-b383-c0cdae08fbe9.jpg width="400" height="350" align="left" >
-<img src=https://user-images.githubusercontent.com/65767592/221590973-2000ab1d-6d99-499e-93ea-baa722bf59e2.png width="400" height="350" > 
+<img src=https://user-images.githubusercontent.com/65767592/221591207-7d4cdd2c-b77c-4253-b383-c0cdae08fbe9.jpg width="500" height="350" align="left" >
+<img src=https://user-images.githubusercontent.com/65767592/221590973-2000ab1d-6d99-499e-93ea-baa722bf59e2.png width="500" height="350" > 
 
 
 
