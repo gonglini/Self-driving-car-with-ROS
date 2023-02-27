@@ -58,17 +58,16 @@ catkin_ws/
 If any git permission errors are encountered, try the following suggestions via [this stackoverflow post](https://stackoverflow.com/questions/8197089/fatal-error-when-updating-submodule-using-git).
 
 
-Since the same repo is checked out on both a Json and a laptop/PC, you will need to install an i2c library on the laptop/pc for the software to compile correctly. The `i2cpwm_board` node is not run on the laptop/pc, but compilation will look for dependencies for this node. Install the necessary library via:
-`sudo apt-get install libi2c-dev`
+Since the same repo is checked out on both a Json and a laptop/PC, you will need to install an i2c library on the laptop/pc for the software to compile correctly. The `i2cpwm_board` node is not run on the laptop/pc.
 
-You should install additional packages.
+You should install additional packages on Json.
 
 *  `sudo pip3 install adafruit-circuitpython-pca9685`
 *  `sudo pip3 install adafruit-circuitpython-servokit`
 *   `sudo pip3 install board`
 *   `sudo pip3 install keyboard`
 
-#### Note on detect line
+#### Note on perdict angle
 
 
 #### Running:
@@ -77,13 +76,18 @@ Open at least three terminal windows, with not ssh.
 * `rosrun detect detector_sub.py` Run on the Json to predict angle for driving. If car subscribe topic, it will realize accident and stop driving.
 
 ## Additional Project Components
-#### URDF Model
-The project contains a URDF model of the spot micro platform, along with a custom set of stl files  for visualization. The URDF file was pulled from Florian Wilk's repo, noted at the end of this README, and modified to change the coordinate system orientation, and the dimensions to match dimensions of my spot micro robot. Currently this urdf file is **only** used for RVIZ visualization of the spot micro model. This URDF model should not be treated as perfectly accurate representation of the robot's geometry, nor should the STL files in this repo be used for 3d printing. Use the noted Thingverse files instead. 
+#### Object detection
+The project contains object detection by using darknet yoloV4. I made customize wieght file by machine learning. and here is the result with chart.
 
-The URDF model is defined as a `xacro` file, which is a way to define urdf file using macros to automate certain generative actions. The xacro file is located in the `spot_micro_rviz/urdf` directory. A urdf file can be generated from the `.xacro` file for inspection or use, if needed, via running `xacro` after sourcing a ROS development environment. 
+
+<img src=https://user-images.githubusercontent.com/65767592/221584677-3f24eafd-89b7-4b08-8a37-be0a2375a1e2.png width="600" height="400"/>
+
+
+
 
 #### TF2 Publishing and Odometry
-Robot state transforms are published via TF2. Some primary frames of interest are `base_footprint` and `base_link`, and `lidar_link`. `base_footprint` is a coordinate frame at zero height at the base of the robot frame. `base_link` is the coordinate frame fixed to the body center of the robot, and moves and rotates with body motion. `lidar_link` is a coordinate frame aligned with an installed lidar.
+Robot state transforms ar
+ublished via TF2. Some primary frames of interest are `base_footprint` and `base_link`, and `lidar_link`. `base_footprint` is a coordinate frame at zero height at the base of the robot frame. `base_link` is the coordinate frame fixed to the body center of the robot, and moves and rotates with body motion. `lidar_link` is a coordinate frame aligned with an installed lidar.
 
 An odometry frame, `odom`, is optionally available and can be enabled via a configurable parameter in the `spot_micro_motion_cmd.yaml` file. If enabled, `odom` is parent to the `base_footprint` frame.  **Note that odometry is grossly inaccurate and not calibrated whatsoever**. It is a pure integration of robot rate commands and thus drifts unbounded with errors over time. It is provided for any useful purpose it may serve.
 
@@ -91,12 +95,9 @@ An odometry frame, `odom`, is optionally available and can be enabled via a conf
 If a lidar, such as a RPLidar A1, is mounted to the robot frame, 2d mapping is possible through SLAM with additional ROS nodes, such as hector_slam. More information about running SLAM through this project is described in the [SLAM information](docs/slam_information.md) document.
 
 ## Future Work
-The current software supports basic state machine operation of the spot micro robot, orientation control at rest, and rate command in forward, sideways, and yaw directions, completely through external command messages.
 
 My desired future goals for this project, in order of preference, are to:
-1. ~~Incorporate a lidar (particularly the Slamtec RPLIDAR A1) to achieve simple 2D mapping of a room via SLAM. This may require the addition of an IMU for robot orientation sensing (for example, an Adafruit 9-DOF IMU BNO055).~~
-2. Develop an autonomous motion planning module to guide the robot to execute a simple task around a sensed 2D environment. For example, navigate the perimeter of a room, and dynamically avoid introduced obstacles.
-3. Incorporate a camera or webcam and create a software module to conduct basic image classification. For example, perceive a closed fist or open palm, and have the robot react in specific ways to each.
-4. Implement a more advanced robot controller that can reject external disturbances. 
+1. Using Slam navigation to drive automatically without any lines.
+2. Set goals by python code to interrupt self-driving for a second when it encounter accident.
 
 
