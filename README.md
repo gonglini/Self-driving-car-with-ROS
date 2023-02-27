@@ -3,33 +3,32 @@
 This project was created by ME.
 
 
-<img src=https://user-images.githubusercontent.com/65767592/221577472-4a88ca98-18b0-489c-8adb-9dfcaa3cbef1.jpg width="400" height="300"/>
+<img src=https://user-images.githubusercontent.com/65767592/221577472-4a88ca98-18b0-489c-8adb-9dfcaa3cbef1.jpg width="600" height="400"/>
 
 
 ## Overview
-This project is the source code for a Spot Micro quadruped, a 4 legged open source robot. This code implements motion control of a 3d printed spot micro robot, including sit, stand, angle and walk control. Supporting libraries provide additional capabilities, such as mapping through SLAM and a body mounted lidar. The software is implemented on a Jetson Nano running Ubuntu 18.04 with ROS Melodic installed.
+This project is the source code for self-Driving car. This code implements motion control of a 1:10 sclae car, including move by keyboard or autonomatically. Supporting libraries provide additional capabilities, such as object detection by camera to provide accident. The software is implemented on a Jetson Nano running Ubuntu 18.04 with ROS Melodic installed.
 
 The software is composed of C++ and Python nodes in a ROS framework.
 
 #### Hardware:
-The frame utilized is the Thingverse Spot Micro frame developed by KDY0523. See [the thingverse page](https://www.thingiverse.com/thing:3445283) for additional details for assembly hardware. The files for cls6336hv servos were printed which also fit the hv5523mg servos I used.
+The frame utilized is the 1:10 rc car. 
 
 Component List:
 * Computer: JetsonNano & Melodic ROS
 * Servo control board: PCA9685, controlled via i2c (It's easy to break down, so I recommend you to buy extra products.)
-* Servos: CLS6336HV x12
-* LCD Panel: 16x2 i2c LCD panel (Optional)
+* Servos: CLS6336HV x1
+* Esc: Hobbywing WF brushed esc 60A
 * Battery: 2s 5200 mAh Lipo, direct connection to servo board for servo power
-* UBEC: HKU5 5V/5A ubec, used as 5v voltage regulator to Jetson, lcd panel, pca9685 control board (optional).
-* Lidar: RPLidar A1
+* Camera: 1080p webcam
 * other: XL4015 dc-dc stepdown converter x2
-* Custom 3d printed parts for mounts and reinforcements
 
-More information about the hardware, including the additional custom 3d printed parts, coordinate system information, and sample hardware installation photos, can be found in the [additional hardware description](docs/additional_hardware_description.md) document.
 
 
 #### Software:
-This repo is structured as a catkin workspace in a ROS Melodic envivornment on Ubuntu 16.04. The software may not work or compile outside this environment. Jetson nano images preloaded with Ubuntu 18.04 and a ROS Melodic installation can be found via ubiquity robotics. [See ubiquity robotics webpage](https://downloads.ubiquityrobotics.com/) for download, setup, and wifi setup instructions. It is suggested to also install ROS Melodic on a Ubuntu 18.04 linux installation/dual boot/virtual machine on a PC for development and for running control nodes. Instructions to install ROS kinetic can be found [here](http://wiki.ros.org/melodic/Installation/Ubuntu).
+This repo is structured as a catkin workspace in a ROS Melodic envivornment on Ubuntu 16.04. The software may not work or compile outside this environment. Jetson nano images preloaded with Ubuntu 18.04 and a ROS Melodic installation can be found via ubiquity robotics. [See ubiquity robotics webpage](https://downloads.ubiquityrobotics.com/) for download, setup, and wifi setup instructions. It is suggested to also install ROS Melodic on a Ubuntu 18.04 linux installation/dual boot/virtual machine on a PC for development and for running control nodes. Instructions to install ROS melodicc can be found [here](http://wiki.ros.org/melodic/Installation/Ubuntu).
+
+I used compact command to install ROS melodic made by zeta(https://github.com/zeta0707/installROS.git)
 
 **NOTE**  A SWAP partition of about 8 GB on the jetson sd card is necessary to increase the virtual memory available beyond the Jetsons onboard RAM. In my experience the catkin compilation process uses all the onboard RAM and stalls indefinitely and does not complete without adding a SWAP partition. Example instructions for adding a SWAP partition. 
 
@@ -43,47 +42,22 @@ This repo should be checked out to a catkin workspace on the Jetson Nano so the 
 catkin_ws/
 │
 ├── src/
-│   ├── spot_micro_motion_cmd
-│   │   └── ...
-│   ├── spot_micro_keyboard_cmd
-│   │   └── ...  
-│   └── ...
+│   ├── detect
+│       └── src
+│           └──launch      
+│
 ```
 
-Note that this repo utilizes two git submodules, which require additional steps to check out. After checking out the main repo, checkout the submodules via:
-
-```
-git submodule update --init --recursive
-git submodule update --recursive
-```
 
 If any git permission errors are encountered, try the following suggestions via [this stackoverflow post](https://stackoverflow.com/questions/8197089/fatal-error-when-updating-submodule-using-git).
 
-Three additional ROS packages may need to be installed for this project to build succesfully. They can be installed via:
-```
-sudo apt-get install ros-Melodic-joy
-sudo apt-get install ros-Melodic-rplidar-ros
-sudo apt-get install ros-Melodic-hector-slam
-```
 
 Since the same repo is checked out on both a Json and a laptop/PC, you will need to install an i2c library on the laptop/pc for the software to compile correctly. The `i2cpwm_board` node is not run on the laptop/pc, but compilation will look for dependencies for this node. Install the necessary library via:
 `sudo apt-get install libi2c-dev`
 
-Configure catkin tools so cmake Release flag is added. This speeds up code execution. Alternatively, if you want to debug through an IDE such as VSCode, use build type Debug so debug symbols are generated:
-`catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release`
-
-Compile spot_micro_motion_cmd and i2cpwm_board nodes via catkin tools. The command below will automatically build i2cpwmboard in the process as it is a dependency. E.g.: 
-`catkin build spot_micro_motion_cmd` 
-
-Or just build entire project:
-`catkin build`
-
-If you get an error like the below when running on the Json its likely you are missing the libi2c-dev, which may not be installed in the Json image you download. To fix this, you could install the library on your Json with an `apt-get` command. If you don't have internet on the Json, you can download the file as a debian `.deb` package to your main computer with the right version for ubuntu 18.04 (https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libi2c-dev_3.1.1-1_all.deb.html) and then copy the file via `scp` to the Json (`scp libi2c-dev_3.1.1-1_all.deb ubuntu@10.42.0.1:~/`) and and install it manually (`sudo dpkg -i libi2c-dev_3.1.1-1_all.deb`).
-```
-ros-i2cpwmboard/CMakeFiles/i2cpwm_board.dir/build.make:62: recipe for target 'ros-i2cpwmboard/CMakeFiles/i2cpwm_board.dir/src/i2cpwm_controller.cpp.o' failed
-make[2]: *** [ros-i2cpwmboard/CMakeFiles/i2cpwm_board.dir/src/i2cpwm_controller.cpp.o] Error 1
-CMakeFiles/Makefile2:2343: recipe for target 'ros-i2cpwmboard/CMakeFiles/i2cpwm_board.dir/all' failed
-```
+You should install servokit and pca9685
+sudo pip3 install adafruit-circuitpython-pca9685
+sudo pip3 install adafruit-circuitpython-servokit 
 
 #### Note on Walking Gaits
 The default gait implemented is a 8 phase gait that incorporates body movement which helps maintain balance and stability. An alternate trot gait, where the diagonally opposite legs move simultaneously, can achieve faster walking speeds, but is less stable and requires careful positioning of the robot's center of mass. The trot gait is the one depicted in the animation at the top of this document. See the `spot_micro_motion_cmd` node's config file for information on how to switch to the trot gait. The 8 phase gait can be observed in the linked Youtube video.
