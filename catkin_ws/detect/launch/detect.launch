@@ -1,7 +1,0 @@
-<launch>
-
-	<node pkg="detect" type="detection_pub.py" name="detect" output="screen"/>
-	<node pkg="detect" type="detection_sub.py" name="receiver" output="screen"/>
-
-</launch>	
-	
