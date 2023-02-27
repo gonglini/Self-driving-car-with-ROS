@@ -3,7 +3,7 @@
 This project was created by gonglini (me).
 
 
-<img src=https://user-images.githubusercontent.com/65767592/221577472-4a88ca98-18b0-489c-8adb-9dfcaa3cbef1.jpg width="600" height="400" center\>
+<img src=https://user-images.githubusercontent.com/65767592/221577472-4a88ca98-18b0-489c-8adb-9dfcaa3cbef1.jpg width="600" height="400" /center\>
 
 
 ## Overview
