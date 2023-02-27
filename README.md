@@ -20,7 +20,7 @@ Component List:
 * Servos: CLS6336HV x1
 * Esc: Hobbywing WF brushed esc 60A
 * Battery: 2s 5200 mAh Lipo, direct connection to servo board for servo power
-* Camera: 1080p webcam
+* Camera: 1080p FHD webcam
 * other: XL4015 dc-dc stepdown converter x2
 
 
@@ -50,7 +50,7 @@ catkin_ws/
 ├── src/
 │   ├── detect
 │       └── src
-│           └──launch      
+│           └── ...
 │
 ```
 
