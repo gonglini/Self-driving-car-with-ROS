@@ -1,6 +1,0 @@
-<launch>
-
-	<node pkg="ros" type="talk.py" name="sender" output="screen"/>
-	<node pkg="ros" type="listen.py" name="receiver" output="screen"/>
-</launch>	
-	
