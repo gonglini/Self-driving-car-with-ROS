@@ -26,17 +26,23 @@ Component List:
 
 
 #### Software:
+
+Software version:
+* Jetpack 4.5.1
+* OpenCV 4.5.1
+* CUDA 10.0
+* CUDNN 8.0
+* Tensorflow 2.5.0
+* Darknet yoloV4
+* ROS Melodic
+
 This repo is structured as a catkin workspace in a ROS Melodic envivornment on Ubuntu 16.04. The software may not work or compile outside this environment. Jetson nano images preloaded with Ubuntu 18.04 and a ROS Melodic installation can be found via ubiquity robotics. [See ubiquity robotics webpage](https://downloads.ubiquityrobotics.com/) for download, setup, and wifi setup instructions. It is suggested to also install ROS Melodic on a Ubuntu 18.04 linux installation/dual boot/virtual machine on a PC for development and for running control nodes. Instructions to install ROS melodicc can be found [here](http://wiki.ros.org/melodic/Installation/Ubuntu).
 
 I used compact command to install ROS melodic made by zeta(https://github.com/zeta0707/installROS.git)
 
 **NOTE**  A SWAP partition of about 8 GB on the jetson sd card is necessary to increase the virtual memory available beyond the Jetsons onboard RAM. In my experience the catkin compilation process uses all the onboard RAM and stalls indefinitely and does not complete without adding a SWAP partition. Example instructions for adding a SWAP partition. 
 
-The provided ROS Melodic make build system can be utilized, but I used `catkin tools` instead ([see catkin tools website]((https://catkin-tools.readthedocs.io/en/latest/))). Compilation commands below will be given assuming `catkin tools`. If not using catkin tools on the jetson nano, the stock `catkin_make` can be used to compile the code via command such as `catkin_make -DCMAKE_BUILD_TYPE=Release` from the home of the catkin workspace.
 
-##### Software Checkout and Setup:
-
-This repo should be checked out to a catkin workspace on the Jetson Nano so the directory structure appears as below. If not already available, a catkin workspace can be created or transitioned from a catkin make workspace using catkin tools ([or if using stock ROS tools, see tutorial pages for creating a catkin workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)). If you don't have the Json connected to the internet you could use the catkin commands to create the workspace on another conputer, then copy the files to a Json over wifi via scp. For example: `scp spotMicro/* ubuntu@10.42.0.1:~/catkin_ws/src/`.
 
 ```
 catkin_ws/
@@ -55,85 +61,20 @@ If any git permission errors are encountered, try the following suggestions via 
 Since the same repo is checked out on both a Json and a laptop/PC, you will need to install an i2c library on the laptop/pc for the software to compile correctly. The `i2cpwm_board` node is not run on the laptop/pc, but compilation will look for dependencies for this node. Install the necessary library via:
 `sudo apt-get install libi2c-dev`
 
-You should install servokit and pca9685
-* 'sudo pip3 install adafruit-circuitpython-pca9685'
-* 'sudo pip3 install adafruit-circuitpython-servokit'
+You should install additional packages.
 
-#### Note on Walking Gaits
-The default gait implemented is a 8 phase gait that incorporates body movement which helps maintain balance and stability. An alternate trot gait, where the diagonally opposite legs move simultaneously, can achieve faster walking speeds, but is less stable and requires careful positioning of the robot's center of mass. The trot gait is the one depicted in the animation at the top of this document. See the `spot_micro_motion_cmd` node's config file for information on how to switch to the trot gait. The 8 phase gait can be observed in the linked Youtube video.
+*  `sudo pip3 install adafruit-circuitpython-pca9685`
+*  `sudo pip3 install adafruit-circuitpython-servokit`
+*   `sudo pip3 install board`
+*   `sudo pip3 install keyboard`
 
-## General Instructions
-This section attemps to be a full set of instructions to get a spot micro robot calibrated and running with this code.
+#### Note on detect line
 
-#### Servo Configuration
-
-Comprehensive instructions for servo installation, calibration, and configuration can be found in [servo_calibration](docs/servo_calibration.md) document.
 
 #### Running:
-Open at least two terminal windows, with at least one ssh'ed to the Json. I reccomend using a terminal multiplexer such as `tmux` for convenience. Start the following launch files in the respective terminals:
-* `roslaunch spot_micro_motion_cmd motion_cmd.launch`: Run on the Json. Launches the i2c_pwmboard node as well as the robot's motion control node. On startup, the motion command node sends a servo configuration message to the i2c_pwmboard node, then starts a state machines and enteres an idle state.
-* `roslaunch spot_micro_keyboard_command keyboard_command.launch` Run on a local machine. Launches the keyboard command node, for issuing keyboard commands to the spot micro robot
-* **OPTIONAL**: The above two launch files can take optional command line arguments to start additional nodes. Some of the command line arguments are listed below.
-    * Command line arguments for `motion_cmd.launch`:
-        * `run_standalone:=true`: Runs the motion command node standalone (without running the i2c_pwmboard node)
-        * `debug_mode:=true`: Overrides the `debug_mode` parameter to true. Useful in combination with `run_standalone` for running or debugging the motion command node on a PC instead of the Json
-        * `run_lcd:=true`: Runs the lcd monitor node to display simple state information on a LCD monitor if installed. Only works running on a Json
-    * Command line arguments for `keyboard_command.launch`:
-        * `run_rviz:=true`: Starts RVIZ and displays a 3d model of the robot with state update in real time.
-        * `run_plot:=true`: Runs python plotting node to display a stick figure wireframe model of the spot micro robot state in real time. Must be run on a PC. Requires updated matplot lib python library (matplotlib 2.2.5) and updated numpy library (numpy 1.16.6).
-* For running SLAM, see the [SLAM document](docs/slam_information.md) for more information, which is also referenced in the [Additional Project Components](#additional-project-components) section.
-        
-
-Stopping and exiting the keyboard command launch file may require typing `quit` and pressing `Ctrl-C`, as well as closing any plot windows if plotting was utilized. 
-
-Command line arguments are added to the end of a `roslaunch` command, and multiple arguments can be appended at once, for example:
-`roslaunch spot_micro_motion_cmd motion_cmd.launch run_standalone:=true debug_mode:=true`
-
-The launch files are an included convenience, but if needed, nodes can be run individuallay via `rosrun` (except for spot_micro_motion command which must be launched by launch file to read in parameters). For example, the minimum required nodes could be run with the following three commands in three seperate terminals:
-* `rosrun i2cpwm_board i2cpwm_board` 
-* `roslaunch spot_micro_motion_cmd motion_cmd.launch run_standalone:=true`
-* `rosrun spot_micro_keyboard_command spotMicroKeyboardMove.py`
-
-
-#### Control instructions:
-The robot software is driven by a finite state machine of discreet control modes. On the terminal running the spot_micro_keyboard_command node, keyboard commands are issued to move through the state machine and also to command body rates and angle commands.
-
-After all sfotware is started, type in and issue `stand` command in the keyboard control node terminal to command the robot to stand up. From here, either an `idle` command can be issued to sit back down and set the servos to idle, or `angle_cmd` can be issued to command body orientation angles, or `walk` can be issued to enter walk mode.
-
-In angle_cmd mode, the keys `w` and `s` are used to control pitch, `a` and `d` to control roll, and `q` and `e` to control yaw. `u` is used to exit back to control mode input.
-
-In walk command mode, the keys `w` and `s` are used to control forward speed, `a` and `d` to control side speed, and `q` and `e` to control yaw rate. `u` is used to exit back to stand mode.
-
-Note that the software does not currently support any command limits so deleterious or even hardware damaging behavior may be experienced if commanding orienetations or body rates beyond the capability of the robot.
-
-Typing `quit` at the command input will quit the program with the servos fixed at their previous commanded value. Thus is it reccomended to put the robot in idle before quitting. In idle mode servos are commanded such that they hold no fixed position and can "free wheel".
-
-## Description of ROS Nodes
-* **spot_micro_motion_cmd**: Main node running robot control software. Takes in state event commands and motion commands, outputs servo control commands. Utilizes a yaml configuration file for various software settings. Consists of a state machine with 5 states and the following mode diagram: 
-
-![Spot Micro Walking](assets/state_machine.png)
-
-The default gait is a walk style gait that consists of 8 phases, swings only one leg at a time, and shifts the body in between leg swings to balance the body over the 3 legs that remain on the ground. No speed or angle command limits are implemented in the software, but the inverse kinematics model does cruide trigonometric domain function limiting to avoid math errors.
-
-A yaml confguration file is used for holding various software configuration settings, including servo configuration dictionaries. Servo's can be calibrated using the servo_move_keyboard node, a calibration of angles via eye is sufficient for the reasonable performance.
-
-* **i2cpwm_board**: Node that controls the pca 9685 servo control board. Operates mostly under proportional control mode, but also in absolute control mode to command servos to idle
-
-* **spot_micro_keyboard_command**: Node that sends state, motion, and rate commands to the motion control node via keyboard
-
-* **spot_micro_joy**: Sends the same commands like the keyboard_command_node but is controlled by sensor_msgs/Joy, which are emitted by joy_node. By default it is configured for PS4 button-layout. Make sure to take a look into the [joystick control](docs/joystick_control.md) documentaion before trying.
-
-* **lcd_monitor**: Node that displays basic state information and control values on the lcd monitor
-
-* **spot_micro_plot**: Displays a wireframe figure of the robot via matplotlib and received state data from spot_micro_motion_cmd. This plot node can be used in lieu of the real robot for testing motions if the spot_micro_motion_cmd node is run standalone, and with the debug_mode parameter set true.
-
-* **servo_move_keyboard**: A python node that can be used in conjuction with the i2cpwm_board node to manually command an individual servo via keyboard controls. Can be used for servo calibration to build the servo configuration dictionary.
-
-* **spot_micro_rviz**: A node to launch RVIZ and show a visualization of the spot micro model, as well as mapping and navigational elements in the future. The `show_and_move_model_via_gui` launch file can be launched standalone to show a manually moveable spot micro model via GUI sliders. 
-
-Note that the servo control node `i2cpwm_board` should only be commanded by one node at one time. Thus `spot_micro_motion_command` and `servo_move_keyboard` should be run exclusionary; only one should ever run at one time.
-
-* **spot_micro_launch**: Not a node, but a launch package purely for collecting high level launch files. The launch files are for more advanced use cases such as running SLAM. 
+Open at least three terminal windows, with not ssh. 
+* `rosrun detect detector_pub.py`: Run on the Json to detect object while driving. If car detect specific object, it will publish topic.
+* `rosrun detect detector_sub.py` Run on the Json to predict angle for driving. If car subscribe topic, it will realize accident and stop driving.
 
 ## Additional Project Components
 #### URDF Model
@@ -158,22 +99,4 @@ My desired future goals for this project, in order of preference, are to:
 3. Incorporate a camera or webcam and create a software module to conduct basic image classification. For example, perceive a closed fist or open palm, and have the robot react in specific ways to each.
 4. Implement a more advanced robot controller that can reject external disturbances. 
 
-## External Links and References
-* Spot Micro AI community: https://gitlab.com/custom_robots/spotmicroai
-
-* Research paper used for inverse kinematics: 
-`Sen, Muhammed Arif & Bakircioglu, Veli & Kalyoncu, Mete. (2017). 
-Inverse Kinematic Analysis Of A Quadruped Robot.
-International Journal of Scientific & Technology Research. 6.`
-
-* Stanford robotics for inspiration for gait code: https://github.com/stanfordroboticsclub/StanfordQuadruped
-* Spot micro URDF model copied and modified from Florian Wilk's repo
-    * https://gitlab.com/custom_robots/spotmicroai/simulation/-/tree/master/Basic%20simulation%20by%20user%20Florian%20Wilk
-* List of submodules utilized:
-    * ros-i2cpwmboard by bradanlane for PCA9685 support
-        * https://gitlab.com/bradanlane/ros-i2cpwmboard
-    * spot_micro_kinematics_python by me :) for python spot micro kinematic calculations:
-        * https://github.com/mike4192/spot_micro_kinematics_python 
-    * spot_micro_kinematics_cpp by me :) for c++ spot micro kinematic calculations:
-        * https://github.com/mike4192/spot_micro_kinematics_cpp 
 
