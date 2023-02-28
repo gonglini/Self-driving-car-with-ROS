@@ -37,7 +37,7 @@ Software version:
 
 This repo is structured as a catkin workspace in a ROS Melodic envivornment on Ubuntu 18.04. The software may not work or compile outside this environment. Jetson nano images preloaded with Ubuntu 18.04 and a ROS Melodic installation can be found via ubiquity robotics. [See ubiquity robotics webpage](https://downloads.ubiquityrobotics.com/) for download, setup, and wifi setup instructions. It is suggested to also install ROS Melodic on a Ubuntu 18.04 linux installation/dual boot/virtual machine on a PC for development and for running control nodes. Instructions to install ROS melodicc can be found [here](http://wiki.ros.org/melodic/Installation/Ubuntu).
 
-I used compact command to install ROS melodic made by zeta(https://github.com/zeta0707/installROS.git)
+I used compact command to install ROS melodic written by zeta(https://github.com/zeta0707/installROS.git)
 
 **NOTE**  A SWAP partition of about 8 GB on the jetson sd card is necessary to increase the virtual memory available beyond the Jetsons onboard RAM. In my experience the catkin compilation process uses all the onboard RAM and stalls indefinitely and does not complete without adding a SWAP partition. Example instructions for adding a SWAP partition. 
 
