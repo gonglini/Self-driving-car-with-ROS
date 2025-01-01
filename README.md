@@ -59,7 +59,7 @@ If any git permission errors are encountered, try the following suggestions via 
 
 Since the same repo is checked out on both a Json and a laptop/PC, you will need to install an i2c library on the laptop/pc for the software to compile correctly. The `i2cpwm_board`is not run on the laptop/pc.
 
-You should install additional packages on Json.
+You should install additional packages on Jetson.
 
 *  `sudo pip3 install adafruit-circuitpython-pca9685`
 *  `sudo pip3 install adafruit-circuitpython-servokit`
